@@ -80,9 +80,20 @@ export default class TimelineContainer extends PIXI.Container {
         const blockSize = this.calculateBlockSize(rendererHeight);
         const margin = this.calculateMargin(blockSize);
 
+        const [fromHeight, toHeight] = this.getVisibleHeightRange(this.targetHeight);
         Object.values(this.heightGroups).forEach(blockIds => {
             for (let i = 0; i < blockIds.length; i++) {
                 const blockId = blockIds[i];
+                const block = this.blockIdsToBlocks[blockId];
+
+                // Don't bother showing the block if it isn't visible
+                if (block.height < fromHeight || block.height > toHeight) {
+                    if (this.blockIdsToBlockSprites[blockId]) {
+                        const blockSprite = this.blockIdsToBlockSprites[blockId];
+                        blockSprite.visible = false;
+                    }
+                    continue;
+                }
 
                 // Create the sprite if it hadn't been created yet
                 if (!this.blockIdsToBlockSprites[blockId]) {
@@ -93,9 +104,8 @@ export default class TimelineContainer extends PIXI.Container {
 
                 const blockSprite = this.blockIdsToBlockSprites[blockId];
                 blockSprite.resize(blockSize);
+                blockSprite.visible = true;
 
-                const block = this.blockIdsToBlocks[blockId];
-                blockSprite.x = block.height * (blockSize + margin);
                 blockSprite.x = this.calculateBlockSpriteX(block.height, blockSize, margin);
                 blockSprite.y = this.calculateBlockSpriteY(i, blockIds.length, rendererHeight);
             }

@@ -13,7 +13,7 @@ export default class TimelineContainer extends PIXI.Container {
     private readonly blockContainer: PIXI.Container;
 
     private readonly blockIdsToBlocks: { [id: number]: Block } = {};
-    private readonly heightGroups: { [height: number]: number[] } = {};
+    private readonly blockHeightGroups: { [height: number]: number[] } = {};
     private readonly blockIdsToBlockSprites: { [id: number]: BlockSprite } = {};
     private readonly blockIdsToEdgeSprites: { [id: number]: EdgeSprite[] } = {};
 
@@ -40,10 +40,10 @@ export default class TimelineContainer extends PIXI.Container {
 
                 // Add the block to its "height group"--an ordered set of
                 // blocks with the same height
-                if (!this.heightGroups[block.height]) {
-                    this.heightGroups[block.height] = [];
+                if (!this.blockHeightGroups[block.height]) {
+                    this.blockHeightGroups[block.height] = [];
                 }
-                this.heightGroups[block.height].push(block.id);
+                this.blockHeightGroups[block.height].push(block.id);
 
                 // The timeline container changed so the block
                 // sprite positions needs to be recalculated
@@ -81,7 +81,7 @@ export default class TimelineContainer extends PIXI.Container {
         const margin = this.calculateMargin(blockSize);
 
         const [fromHeight, toHeight] = this.getVisibleHeightRange(this.targetHeight);
-        Object.values(this.heightGroups).forEach(blockIds => {
+        Object.values(this.blockHeightGroups).forEach(blockIds => {
             for (let i = 0; i < blockIds.length; i++) {
                 const blockId = blockIds[i];
                 const block = this.blockIdsToBlocks[blockId];

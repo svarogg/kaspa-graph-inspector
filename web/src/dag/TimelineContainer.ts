@@ -34,7 +34,7 @@ export default class TimelineContainer extends PIXI.Container {
     insertOrIgnoreBlocks = (blocks: Block[]) => {
         let shouldRecalculateBlockSpritePositions = false;
         for (let block of blocks) {
-            if (!this.blockIdsToBlockSprites[block.id]) {
+            if (!this.blockIdsToBlocks[block.id]) {
                 // Add this block to block-by-id map
                 this.blockIdsToBlocks[block.id] = block;
 
@@ -45,13 +45,12 @@ export default class TimelineContainer extends PIXI.Container {
                 }
                 this.heightGroups[block.height].push(block.id);
 
-                // Add the block to the block-by-ID map
-                const blockSprite = new BlockSprite(this.application, block.id);
-                this.blockIdsToBlockSprites[block.id] = blockSprite;
+                // The timeline container changed so the block
+                // sprite positions needs to be recalculated
+                shouldRecalculateBlockSpritePositions = true;
+            }
 
-                // Add the block sprite to the block container
-                this.blockContainer.addChild(blockSprite);
-
+            if (!this.blockIdsToBlockSprites[block.id]) {
                 // Create edges between the block and all its
                 // parents and add them to the appropriate
                 // collections
@@ -64,10 +63,6 @@ export default class TimelineContainer extends PIXI.Container {
                         this.edgeContainer.addChild(edgeSprite);
                     }
                 }
-
-                // The timeline container changed so the block
-                // sprite positions needs to be recalculated
-                shouldRecalculateBlockSpritePositions = true;
             }
         }
         if (shouldRecalculateBlockSpritePositions) {
@@ -88,6 +83,14 @@ export default class TimelineContainer extends PIXI.Container {
         Object.values(this.heightGroups).forEach(blockIds => {
             for (let i = 0; i < blockIds.length; i++) {
                 const blockId = blockIds[i];
+
+                // Create the sprite if it hadn't been created yet
+                if (!this.blockIdsToBlockSprites[blockId]) {
+                    const blockSprite = new BlockSprite(this.application, blockId);
+                    this.blockIdsToBlockSprites[blockId] = blockSprite;
+                    this.blockContainer.addChild(blockSprite);
+                }
+
                 const blockSprite = this.blockIdsToBlockSprites[blockId];
                 blockSprite.resize(blockSize);
 

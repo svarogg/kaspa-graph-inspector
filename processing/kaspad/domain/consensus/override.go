@@ -26,7 +26,7 @@ func (c *Consensus) GetBlockAcceptanceData(blockHash *externalapi.DomainHash) (e
 	return c.kaspadConsensus.GetBlockAcceptanceData(blockHash)
 }
 
-func (c *Consensus) GetHashesBetween(lowHash, highHash *externalapi.DomainHash, maxBlueScoreDifference uint64) ([]*externalapi.DomainHash, error) {
+func (c *Consensus) GetHashesBetween(lowHash, highHash *externalapi.DomainHash, maxBlueScoreDifference uint64) (hashes []*externalapi.DomainHash, actualHighHash *externalapi.DomainHash, err error) {
 	return c.kaspadConsensus.GetHashesBetween(lowHash, highHash, maxBlueScoreDifference)
 }
 

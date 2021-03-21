@@ -30,3 +30,7 @@ func (mm *miningManager) HandleNewBlockTransactions(txs []*externalapi.DomainTra
 func (mm *miningManager) ValidateAndInsertTransaction(transaction *externalapi.DomainTransaction, allowOrphan bool) error {
 	return nil
 }
+
+func (mm *miningManager) TransactionCount() int {
+	return 0
+}

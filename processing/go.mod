@@ -1,6 +1,6 @@
 module github.com/stasatdaglabs/kaspa-graph-inspector/processing
 
-go 1.15
+go 1.16
 
 require (
 	github.com/go-pg/pg/extra/pgdebug v0.2.0
